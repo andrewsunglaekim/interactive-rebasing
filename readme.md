@@ -126,3 +126,331 @@ In order to change the history of this commit `G` with an interactive rebase, we
 $ git checkout G
 $ git rebase D -i
 ```
+
+Upon hitting enter, the command line will automatically open up your text editor associated with git.
+
+> If it did not, check [this link](https://help.github.com/en/github/using-git/associating-text-editors-with-git) to associate a default text editor to our git config.
+
+The file it opens in the text editor will look something like this:
+
+```
+pick 7bc099f commit message for E
+pick 203f7d6 commit message for F
+pick 4ea7cd0 commit message for G
+
+# Rebase e8dfdb1..4ea7cd0 onto e8dfdb1 (3 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+# d, drop = remove commit
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+> you git sha's will be different and commit message is whatever you make your commit message, they are contrived for the purposes of this lesson. Additionally we'll be using this as the base for all our other commands
+
+This laundry list of things is daunting at first. But the interface is pretty simple. Our job in this first interface is to edit the word `pick` on the left according to how we want to interact with that specific commit.
+
+`pick` is the default action that a normal rebase executes. The comments are there just to help with info, in the first page we are only editing the `pick` word if we want to do something other than the default behavior.
+
+## Rewording a commit message
+
+Let's say we want to reword the commit message for commit `F`. We would edit the file in this way:
+
+```
+pick 7bc099f commit message for E
+reword 203f7d6 commit message for F
+pick 4ea7cd0 commit message for G
+
+# Rebase e8dfdb1..4ea7cd0 onto e8dfdb1 (3 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+# d, drop = remove commit
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+> This text looks identical to the first block, except the second line has `reword` instead of `pick`
+
+Once we've made the edit, we then save and close the file. It then automatically open up yet another text editor window to edit your commit message, it will look something like this:
+
+```
+commit message for F
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Wed Nov 13 14:06:15 2019 -0500
+#
+# interactive rebase in progress; onto e8dfdb1
+# Last commands done (2 commands done):
+#    pick 7bc099f commit 5
+#    reword 54dfefd new commit message for F
+# No commands remaining.
+# You are currently editing a commit while rebasing branch 'master' on 'e8dfdb1'.
+#
+# Changes to be committed:
+#	modified:   test.txt
+#
+```
+
+> This is a file that we must now edit in order to change the commit message. The comments here are just for direction again.
+
+We may edit it in this way:
+
+```
+brand new much more awesome and semantic commit message
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Wed Nov 13 14:06:15 2019 -0500
+#
+# interactive rebase in progress; onto e8dfdb1
+# Last commands done (2 commands done):
+#    pick 7bc099f commit 5
+#    reword 54dfefd new commit message for F
+# No commands remaining.
+# You are currently editing a commit while rebasing branch 'master' on 'e8dfdb1'.
+#
+# Changes to be committed:
+#	modified:   test.txt
+#
+```
+
+All we've done here is make a better commit message, we'll go ahead and save this file and quit that tab. Now we have successfully reworded one of our commit messages through interactive rebasing.
+
+# Edit a commit
+
+We can additionally edit a commit. We might edit the original pane in this way:
+
+```
+pick 7bc099f commit message for E
+pick 203f7d6 commit message for F
+edit 4ea7cd0 commit message for G
+
+# Rebase e8dfdb1..4ea7cd0 onto e8dfdb1 (3 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+# d, drop = remove commit
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+> we're going to edit the last commit here for ease as we know it will not cause merge conflicts. Particularly when we are just editing text in 1 file. If we do run into a merge conflict, fix as normal, stage changes and continue the rebase with `git rebase --continue`
+
+After saving the above file and closing it, in the terminal we'll be prompted with something like this:
+
+```
+You can amend the commit now, with
+
+  git commit --amend
+
+Once you are satisfied with your changes, run
+
+  git rebase --continue
+```
+
+Now we just edit the files however we want. Then we stage them:
+
+```
+$ git add .
+```
+
+Then we can continue the rebase:
+
+```
+$ git rebase --continue
+```
+
+Then git will prompt us for a commit message in the text editor:
+
+```
+This commit contains awesome new edits
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Wed Nov 13 14:06:15 2019 -0500
+#
+# interactive rebase in progress; onto e8dfdb1
+# Last commands done (2 commands done):
+#    pick 7bc099f commit 5
+#    edit e2812f2 brand new much more awesome commit message + more!
+# No commands remaining.
+# You are currently editing a commit while rebasing branch 'master' on 'e8dfdb1'.
+#
+# Changes to be committed:
+#	modified:   test.txt
+#
+```
+
+Save and quit, and we now have successfully edited a commit rebasing interactively.
+
+# Squashing a commit
+
+We would squash by editing the original interactive rebase prompt in this way:
+
+```
+pick 7bc099f commit message for E
+pick 203f7d6 commit message for F
+squash 4ea7cd0 commit message for G
+
+# Rebase e8dfdb1..4ea7cd0 onto e8dfdb1 (3 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+# d, drop = remove commit
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+After saving this and quitting, we should prompted with a second file that should have this type of content:
+
+```
+# This is a combination of 2 commits.
+# This is the 1st commit message:
+
+commit message for F
+
+# This is the commit message #2:
+
+commit message for G
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Wed Nov 13 15:21:43 2019 -0500
+#
+# interactive rebase in progress; onto b5edf4c
+# Last commands done (4 commands done):
+#    pick 9d61789 this is commit 6
+#    squash 0f4d856 this is commit 8
+# Next commands to do (2 remaining commands):
+#    pick 3a2e517 this is commit 9
+#    pick dc50b0e this is commit 10
+# You are currently rebasing branch 'master' on 'b5edf4c'.
+#
+# Changes to be committed:
+#	modified:   test.txt
+#
+```
+
+> again don't worry about the comments, it just meta data or hints about what you need to be doing. Yours will be different from what you see on this lesson
+
+The important thing to see here is the two commit messages. By default, if we were to save this file and quit to continue the rebase. The squashed commit would no longer exist, however, the changes of the commit would now exist in the squashed commits old parent with a combined commit message of
+
+```
+commit message for F
+
+commit message for G
+```
+
+We can also change it to whatever we want in the above text prompt. It might look something like this:
+
+```
+SUPER AWESOME SQUASHED COMMIT of F and G
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+#
+# Date:      Wed Nov 13 15:21:43 2019 -0500
+#
+# interactive rebase in progress; onto b5edf4c
+# Last commands done (4 commands done):
+#    pick 9d61789 this is commit 6
+#    squash 0f4d856 this is commit 8
+# Next commands to do (2 remaining commands):
+#    pick 3a2e517 this is commit 9
+#    pick dc50b0e this is commit 10
+# You are currently rebasing branch 'master' on 'b5edf4c'.
+#
+# Changes to be committed:
+#	modified:   test.txt
+#
+```
+
+If we save and quit the file, we'll now see that the squashed commit was removed, the parent of that commit now has a new message, and a different diff! All through an interactive rebase!
+
+# Dropping commits
+
+We can also drop commits. It might look something like this:
+
+```
+pick 7bc099f commit message for E
+pick 203f7d6 commit message for F
+drop 4ea7cd0 commit message for G
+
+# Rebase e8dfdb1..4ea7cd0 onto e8dfdb1 (3 commands)
+#
+# Commands:
+# p, pick = use commit
+# r, reword = use commit, but edit the commit message
+# e, edit = use commit, but stop for amending
+# s, squash = use commit, but meld into previous commit
+# f, fixup = like "squash", but discard this commit's log message
+# x, exec = run command (the rest of the line) using shell
+# d, drop = remove commit
+#
+# These lines can be re-ordered; they are executed from top to bottom.
+#
+# If you remove a line here THAT COMMIT WILL BE LOST.
+#
+# However, if you remove everything, the rebase will be aborted.
+#
+# Note that empty commits are commented out
+```
+
+For this one, it's all we have to do. As soon as this file is saved and exited; the interactive rebase will just drop the last commit in this case!
+
+> It should be noted that editing dropping commits can cause merge conflicts, which we would then have to resolve and continue the rebase from there
+
+# PSA - be careful rebasing, always
+
+We commented above, but another reminder here is probably apt. Rebasing **rewrites** history and should always be used with caution. Interactive rebasing is a tool best used on local branches, not branches that are shared.
