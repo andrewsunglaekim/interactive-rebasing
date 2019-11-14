@@ -19,7 +19,7 @@ In order to learn how to modify our history rebasing interactively, we need to h
 
 A strong foundation in the knowledge of commit histories and the relationship of one commit to another commit will help us explore what actually happens in a rebase.
 
-Today, we'll try and bridge some of our gaps in our knowledge in order to effectively and purposefully change our git histories.
+Today, we'll try and bridge some of the gaps in our knowledge in order to effectively and purposefully change our git histories.
 
 # [The linked list](https://en.wikipedia.org/wiki/Linked_list)
 
@@ -126,6 +126,8 @@ In order to change the history of this commit `G` with an interactive rebase, we
 $ git checkout G
 $ git rebase D -i
 ```
+
+This command will allow us to interactively rebase `G` against the commit `D`
 
 Upon hitting enter, the command line will automatically open up your text editor associated with git.
 
