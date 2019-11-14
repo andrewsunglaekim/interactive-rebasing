@@ -17,9 +17,9 @@ We generally use rebase to merge in upstream changes to our current branch. It's
 
 In order to learn how to modify our history rebasing interactively, we need to have a clear understanding of what rebasing is and how it works.
 
-A strong foundation in knowledge of commit histories and the relationship of one commit to another commit will help us explore what actually happens in a rebase.
+A strong foundation in the knowledge of commit histories and the relationship of one commit to another commit will help us explore what actually happens in a rebase.
 
-Today we'll try and bridge some of those gaps in our knowledge in order to effectively and purposefully change our git histories.
+Today, we'll try and bridge some of our gaps in our knowledge in order to effectively and purposefully change our git histories.
 
 # [The linked list](https://en.wikipedia.org/wiki/Linked_list)
 
